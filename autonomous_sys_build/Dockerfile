@@ -13,7 +13,7 @@ ARG LIBJPEG_VERSION=1.5.2
 ARG WEBSOCKIFY_VERSION=0.8.0
 ARG NOVNC_VERSION=1.0.0
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -qqy --no-install-recommends \
         ca-certificates \
         curl wget emacs vim less sudo lsof net-tools git htop gedit gedit-plugins \
 	unzip zip psmisc xz-utils \
@@ -96,33 +96,34 @@ RUN chmod a+x /root/.vnc/xstartup.turbovnc
 RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > \
     /etc/apt/sources.list.d/ros-latest.list && \
     apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116 && \
-    apt-get update -y && \
-    apt-get install -y ros-kinetic-desktop-full && \
-    apt-get install -y ros-kinetic-navigation && \
-    apt-get install -y ros-kinetic-roscpp && \
-    apt-get install -y ros-kinetic-joy && \
-    apt-get install -y ros-kinetic-kobuki-safety-controller && \
-    apt-get install -y ros-kinetic-yocs-velocity-smoother && \
-    apt-get install -y ros-kinetic-turtlebot-bringup && \
-    apt-get install -y ros-kinetic-geometry-msgs && \
-    apt-get install -y ros-kinetic-yocs-cmd-vel-mux && \
-    apt-get install -y ros-kinetic-diagnostic-aggregator && \
-    apt-get install -y ros-kinetic-depthimage-to-laserscan && \
-    apt-get install -y ros-kinetic-gazebo-ros && \
-    apt-get install -y ros-kinetic-kobuki-gazebo-plugins && \
-    apt-get install -y ros-kinetic-robot-pose-ekf && \
-    apt-get install -y ros-kinetic-robot-state-publisher && \
-    apt-get install -y ros-kinetic-turtlebot-description && \
-    apt-get install -y ros-kinetic-turtlebot-navigation && \
-    apt-get install -y ros-kinetic-xacro && \
+    curl https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
+    apt-get update -qqy && \
+    apt-get install -qqy ros-kinetic-desktop-full && \
+    apt-get install -qqy ros-kinetic-navigation && \
+    apt-get install -qqy ros-kinetic-roscpp && \
+    apt-get install -qqy ros-kinetic-joy && \
+    apt-get install -qqy ros-kinetic-kobuki-safety-controller && \
+    apt-get install -qqy ros-kinetic-yocs-velocity-smoother && \
+    apt-get install -qqy ros-kinetic-turtlebot-bringup && \
+    apt-get install -qqy ros-kinetic-geometry-msgs && \
+    apt-get install -qqy ros-kinetic-yocs-cmd-vel-mux && \
+    apt-get install -qqy ros-kinetic-diagnostic-aggregator && \
+    apt-get install -qqy ros-kinetic-depthimage-to-laserscan && \
+    apt-get install -qqy ros-kinetic-gazebo-ros && \
+    apt-get install -qqy ros-kinetic-kobuki-gazebo-plugins && \
+    apt-get install -qqy ros-kinetic-robot-pose-ekf && \
+    apt-get install -qqy ros-kinetic-robot-state-publisher && \
+    apt-get install -qqy ros-kinetic-turtlebot-description && \
+    apt-get install -qqy ros-kinetic-turtlebot-navigation && \
+    apt-get install -qqy ros-kinetic-xacro && \
     rosdep init && \
     rosdep update && \
     echo "source /opt/ros/kinetic/setup.bash" >> /root/.bashrc
 
-# Upgrade gazebo to gazebo v7
+# Upgrade gazebo to gazebo v9
 RUN sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
 RUN wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add -
-RUN apt-get update -y && apt-get install -y gazebo7
+RUN apt-get update -y && apt-get install -qqy libgazebo9 libsdformat6 gazebo9-common gazebo9
 
 # Add miniconda to root's PATH
 RUN echo "export PATH=/root/miniconda3:$PATH" >> /root/.bashrc
